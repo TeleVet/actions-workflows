@@ -1,0 +1,104 @@
+name: QA Cleanup
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        type: string
+        description: Name of the app that is being updated.
+        required: true
+      image_tag:
+        type: string
+        description: Image tag
+        required: true
+      role-to-assume:
+        type: string
+        description: ARN of the role to assume
+        required: true
+      role-session-name:
+        type: string
+        description: Name to use for role session
+        required: true
+      region:
+        type: string
+        description: AWS region to use
+        required: true
+      registry:
+        type: string
+        description: Registry for image
+        required: true
+      image_name:
+        type: string
+        description: Name for image
+        required: true
+      infra_repo:
+        type: string
+        description: Name of the infrastructure repo
+        required: false
+        default: infrastructure
+    secrets:
+      infra_repo_key:
+        required: true
+
+env:
+  APP_NAME: ${{ inputs.app_name }}
+  IMAGE_REPO: ${{ inputs.registry }}/${{ inputs.image_name }}
+  IMAGE_TAG: ${{ inputs.image_tag }}
+
+jobs:
+  qa-cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Authenticate AWS Tools
+        uses: televet/actions-workflows/.github/actions/aws-auth@main
+        with:
+          role-session-name: ${{ inputs.role-session-name }}
+          role-to-assume: ${{ inputs.role-to-assume }}
+          region: ${{ inputs.region }}
+
+      - name: Select QA Environment
+        id: select-qa-env
+        uses: moonswitch/select-qa-env@v0.3.0
+        with:
+          table: qa-envs
+
+      - name: Checkout infrastructure repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository_owner }}/${{ inputs.infra_repo }}
+          ssh-key: ${{ secrets.infra_repo_key }}
+          path: infrastructure
+
+      - name: Delete QA deployment config file
+        env:
+          QA_LANE: ${{ steps.select-qa-env.outputs.env_name }}
+          QA_FILE: ${{ steps.select-qa-env.outputs.env_name }}.json
+          PR_NUMBER: ${{ github.event.number }}
+          PR_SHA: ${{ github.sha }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_REPO: ${{ github.repository }}
+          URL: ${{ steps.select-qa-env.outputs.url }}
+        run: |-
+          cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
+          ./qa_apps.sh remove
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add . && git diff --cached --quiet || \
+            git commit -m "[ci] Cleanup PR-${{ github.event.number }} from ${{ github.repository }}" && \
+            git push && \
+            git status --porcelain
+          
+          echo "QA file has been updated and pushed."
+      
+      - name: Release QA Environment
+        id: release-qa-env
+        uses: moonswitch/release-qa-env@v0.3.0
+        with:
+          table: qa-envs
