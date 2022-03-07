@@ -31,11 +31,6 @@ on:
         type: string
         description: Name for image
         required: true
-      build_args:
-        type: string
-        description: Same as the `build-args` input on the [Docker Build and Push](https://github.com/docker/build-push-action#build-args-input) action.
-        required: false
-        default: ''
       infra_repo:
         type: string
         description: Name of the infrastructure repo
@@ -44,6 +39,9 @@ on:
     secrets:
       infra_repo_key:
         required: true
+      build_args:
+        description: Same as the `build-args` input on the [Docker Build and Push](https://github.com/docker/build-push-action#build-args-input) action.
+        required: false
 
 env:
   APP_NAME: ${{ inputs.app_name }}
@@ -73,7 +71,7 @@ jobs:
         with:
           registry: ${{ inputs.registry }}
           image_name: ${{ inputs.image_name }}
-          build_args: ${{ inputs.build_args }}
+          build_args: ${{ secrets.build_args }}
           tags: |
             type=ref,event=pr
             type=raw,value=sha-${{ github.event.pull_request.head.sha }}
