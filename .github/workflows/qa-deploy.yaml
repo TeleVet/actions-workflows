@@ -80,6 +80,7 @@ jobs:
         id: select-qa-env
         uses: moonswitch/select-qa-env@v0.3.0
         with:
+          provider: aws
           table: qa-envs
 
       - name: Checkout infrastructure repository
@@ -109,6 +110,7 @@ jobs:
             git push && \
             git status --porcelain
           echo "QA file has been updated and pushed."
+      
       - name: Create QA Deployment
         uses: altinukshini/deployment-action@v1.2.6
         id: deployment

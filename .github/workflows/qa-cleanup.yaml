@@ -67,6 +67,7 @@ jobs:
         id: select-qa-env
         uses: moonswitch/select-qa-env@v0.3.0
         with:
+          provider: aws
           table: qa-envs
 
       - name: Checkout infrastructure repository
@@ -101,4 +102,5 @@ jobs:
         id: release-qa-env
         uses: moonswitch/release-qa-env@v0.3.0
         with:
+          provider: aws
           table: qa-envs
