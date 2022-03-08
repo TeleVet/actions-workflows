@@ -65,7 +65,7 @@ jobs:
 
       - name: Select QA Environment
         id: select-qa-env
-        uses: moonswitch/select-qa-env@v0.3.0
+        uses: moonswitch/select-qa-env@v0.3.2
         with:
           cloud_provider: aws
           table: qa-envs
@@ -100,7 +100,7 @@ jobs:
       
       - name: Release QA Environment
         id: release-qa-env
-        uses: moonswitch/release-qa-env@v0.3.0
+        uses: moonswitch/release-qa-env@v0.3.1
         with:
           cloud_provider: aws
           table: qa-envs
