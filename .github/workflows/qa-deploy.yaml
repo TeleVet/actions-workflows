@@ -103,13 +103,18 @@ jobs:
           cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
           ./qa_apps.sh add
           
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add . && git diff --cached --quiet || \
-            git commit -m "[ci] Deploy PR-${{ github.event.number }} from ${{ github.repository }}" && \
-            git push && \
-            git status --porcelain
-          echo "QA file has been updated and pushed."
+          if [ -s "${QA_FILE}" -a -s "qa_lanes.libsonnet" ]; then
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add . && git diff --cached --quiet || \
+              git commit -m "[ci] Deploy PR-${{ github.event.number }} from ${{ github.repository }}" && \
+              git push && \
+              git status --porcelain
+            echo "QA file has been updated and pushed."
+          else
+            echo "${QA_FILE} or qa_lanes.libsonnet is empty. Aborting job."
+            exit 1
+          fi
       
       - name: Create QA Deployment
         uses: altinukshini/deployment-action@v1.2.6
