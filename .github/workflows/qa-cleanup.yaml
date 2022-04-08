@@ -90,7 +90,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
           ./qa_apps.sh remove
 
-          if [ -s "${QA_FILE}" -a -s "qa_lanes.libsonnet" ]; then
+          if { [ -f "${QA_FILE}" -a -s "${QA_FILE}" ] || [ ! -f "${QA_FILE}" ]; } && [ -s "qa_lanes.libsonnet" ]; then
             git config user.name github-actions
             git config user.email github-actions@github.com
             git add . && git diff --cached --quiet || \
