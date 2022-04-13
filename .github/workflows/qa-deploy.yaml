@@ -128,3 +128,26 @@ jobs:
           environment: ${{ steps.select-qa-env.outputs.env_name }}
           initial_status: success
           ref: ${{ github.event.pull_request.head.ref }}
+
+      # Allow time to spin up before running tests
+      - run: sleep 6m
+        if: ${{ (github.repository == 'clinic-web' || github.repository == 'care-web') && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
+
+      - name: Run Clinic Web Automation Tests
+        uses: peter-evans/repository-dispatch@v1
+        # Just run for a test branch - will run on all branches once confirmed it's working
+        if: ${{ github.repository == 'clinic-web' && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
+        with:
+          token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
+          repository: TeleVet/e2e-tests
+          event-type: clinic-web-automated-test
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "clinic-web", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
+
+      - name: Run Care Web Automation Tests
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'care-web' && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
+        with:
+          token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
+          repository: TeleVet/e2e-tests
+          event-type: care-web-automated-test
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "care-web", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
