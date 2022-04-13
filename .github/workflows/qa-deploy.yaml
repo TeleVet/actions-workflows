@@ -131,12 +131,12 @@ jobs:
 
       # Allow time to spin up before running tests
       - run: sleep 6m
-        if: ${{ (github.repository == 'clinic-web' || github.repository == 'care-web') && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
+        if: ${{ (github.repository == 'TeleVet/clinic-web' || github.repository == 'TeleVet/care-web') && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
 
       - name: Run Clinic Web Automation Tests
         uses: peter-evans/repository-dispatch@v1
         # Just run for a test branch - will run on all branches once confirmed it's working
-        if: ${{ github.repository == 'clinic-web' && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
+        if: ${{ github.repository == 'TeleVet/clinic-web' && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
         with:
           token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
           repository: TeleVet/e2e-tests
@@ -145,7 +145,7 @@ jobs:
 
       - name: Run Care Web Automation Tests
         uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'care-web' && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
+        if: ${{ github.repository == 'TeleVet/care-web' && github.event.pull_request.head.ref == 'al/tests-in-new-qa-lanes' }}
         with:
           token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
           repository: TeleVet/e2e-tests
