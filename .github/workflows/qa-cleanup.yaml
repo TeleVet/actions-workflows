@@ -86,23 +86,28 @@ jobs:
           PR_BRANCH: ${{ github.event.pull_request.head.ref }}
           PR_REPO: ${{ github.repository }}
           URL: ${{ steps.select-qa-env.outputs.url }}
-        run: |-
-          cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
-          ./qa_apps.sh remove
+        uses: nick-fields/retry@v2
+        with:
+          timeout_seconds: 60
+          max_attempts: 5
+          retry_on: error
+          command: |-
+            cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
+            ./qa_apps.sh remove
 
-          if { [ -f "${QA_FILE}" -a -s "${QA_FILE}" ] || [ ! -f "${QA_FILE}" ]; } && [ -s "qa_lanes.libsonnet" ]; then
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git add . && git diff --cached --quiet || \
-              git commit -m "[ci] Cleanup PR-${{ github.event.number }} from ${{ github.repository }}" && \
-              git push && \
-              git status --porcelain
-            
-            echo "QA file has been updated and pushed."
-          else
-            echo "${QA_FILE} or qa_lanes.libsonnet is empty. Aborting job."
-            exit 1
-          fi
+            if { [ -f "${QA_FILE}" -a -s "${QA_FILE}" ] || [ ! -f "${QA_FILE}" ]; } && [ -s "qa_lanes.libsonnet" ]; then
+              git config user.name github-actions
+              git config user.email github-actions@github.com
+              git add . && git diff --cached --quiet || \
+                git commit -m "[ci] Cleanup PR-${{ github.event.number }} from ${{ github.repository }}" && \
+                git push && \
+                git status --porcelain
+              
+              echo "QA file has been updated and pushed."
+            else
+              echo "${QA_FILE} or qa_lanes.libsonnet is empty. Aborting job."
+              exit 1
+            fi
       
       - name: Release QA Environment
         id: release-qa-env
