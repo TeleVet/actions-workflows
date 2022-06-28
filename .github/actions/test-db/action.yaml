@@ -10,9 +10,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout DB SDK
-      uses: docker/setup-buildx-action@v1
-
     - uses: actions/checkout@v2
       with:
         repository: TeleVet/db-sdk-prisma2
@@ -23,7 +20,6 @@ runs:
       run: |
         npm i
         npx prisma migrate dev
-        npx prisma db seed
       working-directory: db-sdk-prisma2
       env:
         DATABASE_URL: ${{ inputs.db_url }}
