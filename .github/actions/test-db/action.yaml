@@ -4,6 +4,9 @@ inputs:
   db_url:
     description: Databse Url
     required: true
+  infra_repo_key:
+    description: Secret Key
+    required: true
 runs:
   using: composite
   steps:
@@ -14,7 +17,7 @@ runs:
       with:
         repository: TeleVet/db-sdk-prisma2
         path: db-sdk-prisma2
-        ssh-key: ${{ secrets.infra_repo_key }}
+        ssh-key: ${{ inputs.infra_repo_key }}
 
     - shell: bash
       run: |
