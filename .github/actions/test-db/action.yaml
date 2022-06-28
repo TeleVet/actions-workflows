@@ -21,3 +21,5 @@ runs:
         npm i
         npm run prisma migrate dev
         npm run prisma db seed
+      env:
+        DATABASE_URL: ${{ inputs.db_url }}
