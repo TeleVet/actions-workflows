@@ -24,5 +24,6 @@ runs:
         npm i
         npx prisma migrate dev
         npx prisma db seed
+      working-directory: db-sdk-prisma2
       env:
         DATABASE_URL: ${{ inputs.db_url }}
