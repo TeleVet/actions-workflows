@@ -1,0 +1,23 @@
+name: Spin Up Test DB
+description: Builds a docker image and pushes to a remote registry
+inputs:
+  db_url:
+    description: Databse Url
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Checkout DB SDK
+      uses: docker/setup-buildx-action@v1
+
+    - uses: actions/checkout@v2
+      with:
+        repository: TeleVet/db-sdk-prisma2
+        path: db-sdk-prisma2
+        ssh-key: ${{ secrets.infra_repo_key }}
+
+    - shell: bash
+      run: |
+        npm i
+        npm run prisma migrate dev
+        npm run prisma db seed
