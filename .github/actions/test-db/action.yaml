@@ -1,9 +1,6 @@
 name: Spin Up Test DB
 description: Builds a docker image and pushes to a remote registry
 inputs:
-  db_url:
-    description: Databse Url
-    required: true
   infra_repo_key:
     description: Secret Key
     required: true
@@ -22,5 +19,3 @@ runs:
         npx prisma migrate dev
         npx prisma db seed
       working-directory: db-sdk-prisma2
-      env:
-        DATABASE_URL: ${{ inputs.db_url }}
