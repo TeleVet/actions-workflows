@@ -4,6 +4,9 @@ inputs:
   infra_repo_key:
     description: Secret Key
     required: true
+  branch:
+    description: Branch to pull from
+    required: false
 runs:
   using: composite
   steps:
@@ -12,6 +15,7 @@ runs:
         repository: TeleVet/db-sdk-prisma2
         path: db-sdk-prisma2
         ssh-key: ${{ inputs.infra_repo_key }}
+        ref: ${{ inputs.branch }}
 
     - shell: bash
       run: |
