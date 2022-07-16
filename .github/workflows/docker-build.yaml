@@ -59,3 +59,4 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha,format=long
+            type=ref,event=tag
