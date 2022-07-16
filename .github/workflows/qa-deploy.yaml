@@ -59,7 +59,7 @@ jobs:
       deployments: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Authenticate AWS Tools
         uses: televet/actions-workflows/.github/actions/aws-auth@main
@@ -86,7 +86,7 @@ jobs:
           table: qa-envs
 
       - name: Checkout infrastructure repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: ${{ github.repository_owner }}/${{ inputs.infra_repo }}
           ssh-key: ${{ secrets.infra_repo_key }}
