@@ -56,7 +56,6 @@ jobs:
           registry: ${{ inputs.registry }}
           image_name: ${{ inputs.image_name }}
           build_args: ${{ secrets.build_args }}
-          platforms: linux/amd64,linux/arm64
           tags: |
             type=ref,event=branch
             type=sha,format=long
