@@ -109,7 +109,7 @@ jobs:
           command: |-
             cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
             ./qa_apps.sh add
-            
+
             if [ -s "${QA_FILE}" -a -s "qa_lanes.libsonnet" ]; then
               git config user.name github-actions
               git config user.email github-actions@github.com
@@ -117,12 +117,18 @@ jobs:
                 git commit -m "[ci] Deploy PR-${{ github.event.number }} from ${{ github.repository }}" && \
                 git push && \
                 git status --porcelain
+
+              EXIT_CODE=$?
+              if [ "$EXIT_CODE" != "0" ]; # something failed with the git commands, retry
+                exit 1
+              fi
+
               echo "QA file has been updated and pushed."
             else
               echo "${QA_FILE} or qa_lanes.libsonnet is empty. Aborting job."
               exit 1
             fi
-      
+
       - name: Create QA Deployment
         uses: altinukshini/deployment-action@v1.2.6
         id: deployment

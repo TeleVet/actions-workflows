@@ -102,13 +102,18 @@ jobs:
                 git commit -m "[ci] Cleanup PR-${{ github.event.number }} from ${{ github.repository }}" && \
                 git push && \
                 git status --porcelain
-              
+
+              EXIT_CODE=$?
+              if [ "$EXIT_CODE" != "0" ]; # something failed with the git commands, retry
+                exit 1
+              fi
+
               echo "QA file has been updated and pushed."
             else
               echo "${QA_FILE} or qa_lanes.libsonnet is empty. Aborting job."
               exit 1
             fi
-      
+
       - name: Release QA Environment
         id: release-qa-env
         uses: moonswitch/release-qa-env@v0.3.1
