@@ -20,7 +20,6 @@ runs:
     - shell: bash
       run: |
         npm i
-        npx prisma migrate resolve --applied 20230310152605_drop_enable_push_field
         npx prisma migrate dev
         npx prisma db seed
       working-directory: db-sdk-prisma2
