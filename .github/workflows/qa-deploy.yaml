@@ -138,7 +138,7 @@ jobs:
 
       # Allow time to spin up before running tests
       - run: sleep 7m
-        if: ${{ github.repository == 'TeleVet/clinic-web' || github.repository == 'TeleVet/care-web' }}
+        if: ${{ github.repository == 'TeleVet/clinic-web' || github.repository == 'TeleVet/care-web' || github.repository == 'TeleVet/core-api' }}
 
       - name: Run Clinic Web Automation Tests
         uses: peter-evans/repository-dispatch@v1
@@ -157,3 +157,12 @@ jobs:
           repository: TeleVet/e2e-tests
           event-type: care-web-automated-test
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "care-web", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
+
+      - name: Run Core Api Automation Tests
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/core-api' }}
+        with:
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: core-api-automated-test
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "core-api", "user": "${{ github.action }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
