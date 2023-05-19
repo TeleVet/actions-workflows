@@ -1,0 +1,32 @@
+name: Spin Up Test DB
+description: Builds a docker image and pushes to a remote registry
+inputs:
+  infra_repo_key:
+    description: Secret Key
+    required: true
+  branch:
+    description: Branch to pull from
+    required: false
+  lane:
+    description: lane to pull images from
+    required: false
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: TeleVet/infrastructure
+        path: infrastructure
+        ssh-key: ${{ inputs.infra_repo_key }}
+        ref: ${{ inputs.branch }}
+
+    - shell: Spin up local infrastructure and sleep
+      run: |
+        npm i ts-node
+        npm i
+        LANE=${{ inputs.lane }} npx ts-node local/getQaLaneDeployment.ts
+        docker-compose up -d
+        sleep 120
+        docker container ls
+        docker logs infrastructure-core-api-1
+      working-directory: infrastructure
