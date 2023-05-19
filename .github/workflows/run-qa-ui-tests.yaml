@@ -81,13 +81,6 @@ jobs:
           infra_repo_key: ${{ secrets.infra_repo_key }}
           lane: ${{ steps.select-qa-env.outputs.env_name }}
 
-      - uses: actions/checkout@v2
-        with:
-          repository: TeleVet/e2e-tests
-          path: e2e-tests
-          ssh-key: ${{ secrets.infra_repo_key }}
-          ref: sc/CU-8677upht2_seeded-env-tests
-
       - name: Run Clinic Web Automation Tests
         uses: peter-evans/repository-dispatch@v1
         if: ${{ github.repository == 'TeleVet/clinic-web' }}
