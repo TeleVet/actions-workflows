@@ -20,10 +20,14 @@ runs:
         ssh-key: ${{ inputs.infra_repo_key }}
         ref: ${{ inputs.branch }}
 
+    - name: Sops Binary Installer
+      uses: mdgreenwald/mozilla-sops-action@v1.4.1
+
     - shell: Spin up local infrastructure and sleep
       run: |
         npm i ts-node
         npm i
+        sh decryptLocalServiceEnvs.sh
         LANE=${{ inputs.lane }} npx ts-node local/getQaLaneDeployment.ts
         docker-compose up -d
         sleep 120
