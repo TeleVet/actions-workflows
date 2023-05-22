@@ -76,7 +76,7 @@ jobs:
           table: qa-envs
 
       - name: Spin Up Test Environment
-        uses: televet/actions-workflows/.github/actions/local-infrastucture@local-infrastructure
+        uses: televet/actions-workflows/.github/actions/local-infrastructure@local-infrastructure
         with:
           infra_repo_key: ${{ secrets.infra_repo_key }}
           lane: ${{ steps.select-qa-env.outputs.env_name }}
