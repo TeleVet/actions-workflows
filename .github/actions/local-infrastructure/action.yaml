@@ -23,7 +23,8 @@ runs:
     - name: Sops Binary Installer
       uses: mdgreenwald/mozilla-sops-action@v1.4.1
 
-    - shell: Spin up local infrastructure and sleep
+    - name: Spin up local infrastructure and sleep
+      shell: bash
       run: |
         npm i ts-node
         npm i
