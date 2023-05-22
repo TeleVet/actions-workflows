@@ -21,5 +21,4 @@ runs:
       run: |
         npm i
         npx prisma migrate dev
-        npx prisma db seed
       working-directory: db-sdk-prisma2
