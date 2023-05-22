@@ -16,7 +16,7 @@ runs:
     - name: Authenticate AWS Tools
       uses: televet/actions-workflows/.github/actions/aws-auth@main
       with:
-        role-session-name: github-actions-role
+        role-session-name: github-actions-clinic-web
         role-to-assume: arn:aws:iam::400390564163:role/github-actions-role-Role-1O13C3B2W9PE2
         region: us-east-2
 
