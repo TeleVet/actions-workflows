@@ -33,5 +33,5 @@ runs:
         docker-compose up -d
         sleep 120
         docker container ls
-        docker logs infrastructure-core-api-1
+        docker logs infrastructure_core-api_1
       working-directory: infrastructure
