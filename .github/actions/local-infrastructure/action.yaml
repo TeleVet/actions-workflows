@@ -38,14 +38,8 @@ runs:
         sh decryptLocalServiceEnvs.sh
         LANE=${{ inputs.lane }} npx ts-node local/getQaLaneDeployments.ts
         docker-compose up -d
-        sleep 30
+        sleep 60
+        docker stats -a --no-stream
         docker logs infrastructure_core-api_1
-        sleep 30
-        docker logs infrastructure_core-api_1
-        sleep 30
-        docker logs infrastructure_core-api_1
-        sleep 30
-        docker logs infrastructure_core-api_1
-        sleep 30
-        docker logs infrastructure_core-api_1
+
       working-directory: infrastructure
