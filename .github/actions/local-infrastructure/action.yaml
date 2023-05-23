@@ -41,5 +41,8 @@ runs:
         sleep 60
         docker stats -a --no-stream
         docker logs infrastructure_core-api_1
+        sleep 60
+        docker stats -a --no-stream
+        docker logs infrastructure_core-api_1
 
       working-directory: infrastructure
