@@ -52,4 +52,4 @@ runs:
         docker stats -a --no-stream
         docker logs infrastructure_core-api_1
         curl -fail http://localhost:9220
-        docker container run --rm yauritux/busybox-curl curl http://host.docker.internal:9220
+        docker container run --add-host=host.docker.internal:host-gateway --rm yauritux/busybox-curl curl http://host.docker.internal:9220
