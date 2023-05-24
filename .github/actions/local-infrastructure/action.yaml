@@ -38,11 +38,18 @@ runs:
         sh decryptLocalServiceEnvs.sh
         LANE=${{ inputs.lane }} npx ts-node local/getQaLaneDeployments.ts
         docker-compose up -d
+
+      working-directory: infrastructure
+
+    - name: Sleep
+      shell: bash
+      run: |
         sleep 90
+
+    - name: log docker stats and elasticsearch curls
+      shell: bash
+      run: |
         docker stats -a --no-stream
         docker logs infrastructure_core-api_1
         curl -fail http://localhost:9220
-        docker container run -it -rm yauritux/busybox-curl
-        curl -fail http://host.docker.internal:9220
-        exit
-      working-directory: infrastructure
+        docker container run --rm yauritux/busybox-curl curl http://host.docker.internal:9220
