@@ -38,6 +38,7 @@ runs:
         sh decryptLocalServiceEnvs.sh
         LANE=${{ inputs.lane }} npx ts-node local/getQaLaneDeployments.ts
         docker-compose up -d
+        cat docker-compose.yml
 
       working-directory: infrastructure
 
