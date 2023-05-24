@@ -38,10 +38,11 @@ runs:
         sh decryptLocalServiceEnvs.sh
         LANE=${{ inputs.lane }} npx ts-node local/getQaLaneDeployments.ts
         docker-compose up -d
-        sleep 30
-        docker restart infrastructure_search-api_1
-        sleep 60
+        sleep 90
         docker stats -a --no-stream
         docker logs infrastructure_core-api_1
         curl -fail http://localhost:9220
+        docker container run -it yauritux/busybox-curl
+        curl -fail http://host.docker.internal:9220
+        exit
       working-directory: infrastructure
