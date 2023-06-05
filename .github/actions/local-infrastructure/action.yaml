@@ -36,9 +36,8 @@ runs:
         npm i ts-node
         npm i
         sh decryptLocalServiceEnvs.sh
-        export LANE=${{ inputs.lane }}
-        echo $LANE
-        npx ts-node local/getQaLaneDeployments.ts
+        echo "LANE=${{ inputs.lane }}"
+        LANE=${{ inputs.lane }} npx ts-node local/getQaLaneDeployments.ts
         docker-compose up -d
         cat docker-compose.yml
 
