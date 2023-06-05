@@ -36,11 +36,12 @@ runs:
         npm i ts-node
         npm i
         sh decryptLocalServiceEnvs.sh
-        echo "LANE=${{ inputs.lane }}"
-        LANE=${{ inputs.lane }} npx ts-node local/getQaLaneDeployments.ts
+        echo "$LANE"
+        npx ts-node local/getQaLaneDeployments.ts
         docker-compose up -d
         cat docker-compose.yml
-
+      env:
+        LANE: ${{ inputs.lane }}
       working-directory: infrastructure
 
     - name: Sleep
