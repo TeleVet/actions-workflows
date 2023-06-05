@@ -10,9 +10,6 @@ inputs:
   lane:
     description: lane to pull images from
     required: false
-  github_token:
-    description: token to pull from private repos
-    required: false
 runs:
   using: composite
   steps:
@@ -45,7 +42,7 @@ runs:
         cat docker-compose.yml
       env:
         LANE: ${{ inputs.lane }}
-        GITHUB_TOKEN: ${{ inputs.github_token }}
+        GITHUB_TOKEN: ${{ inputs.infra_repo_key }}
       working-directory: infrastructure
 
     - name: Sleep
