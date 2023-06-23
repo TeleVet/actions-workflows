@@ -136,11 +136,9 @@ jobs:
           initial_status: success
           ref: ${{ github.event.pull_request.head.ref }}
 
-
       # Allow time to spin up before running tests
       - run: sleep 7m
         if: ${{ github.repository == 'TeleVet/clinic-web' || github.repository == 'TeleVet/care-web'}}
-
 
       - name: Run Clinic Web Automation Tests
         uses: peter-evans/repository-dispatch@v1
