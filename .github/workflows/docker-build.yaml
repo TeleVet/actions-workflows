@@ -34,7 +34,7 @@ env:
   IMAGE_TAG: ${{ inputs.image_tag }}
 
 jobs:
-  docker:
+  docker-amd64:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -56,6 +56,38 @@ jobs:
           registry: ${{ inputs.registry }}
           image_name: ${{ inputs.image_name }}
           build_args: ${{ secrets.build_args }}
+          platform: linux/amd64
+          tags: |
+            type=ref,event=branch
+            type=sha,format=long
+            type=ref,event=tag
+  
+  docker-arm64:
+    runs-on:
+      - self-hosted
+      - Linux
+      - ARM64
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate AWS Tools
+        uses: televet/actions-workflows/.github/actions/aws-auth@main
+        with:
+          role-session-name: ${{ inputs.role-session-name }}
+          role-to-assume: ${{ inputs.role-to-assume }}
+          region: ${{ inputs.region }}
+
+      - name: Build & Push Docker Image
+        uses:  televet/actions-workflows/.github/actions/docker-build@main
+        with:
+          registry: ${{ inputs.registry }}
+          image_name: ${{ inputs.image_name }}
+          build_args: ${{ secrets.build_args }}
+          platform: linux/arm64
           tags: |
             type=ref,event=branch
             type=sha,format=long

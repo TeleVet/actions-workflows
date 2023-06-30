@@ -17,6 +17,10 @@ inputs:
   image_name:
     description: Name for image
     required: true
+  platform:
+    description: Platform of the image
+    required: true
+    default: linux/amd64
 runs:
   using: composite
   steps:
@@ -44,5 +48,6 @@ runs:
         build-args: ${{ inputs.build_args }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        platform: ${{ inputs.platform }}
         cache-from: type=gha
         cache-to: type=gha, mode=max
