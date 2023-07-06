@@ -61,6 +61,7 @@ jobs:
             type=ref,event=branch
             type=sha,format=long
             type=ref,event=tag
+            ${{ inputs.image_name }}-amd64
   
   docker-arm64:
     runs-on:
@@ -92,3 +93,4 @@ jobs:
             type=ref,event=branch
             type=sha,format=long
             type=ref,event=tag
+            ${{ inputs.image_name }}-arm64
