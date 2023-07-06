@@ -65,8 +65,8 @@ jobs:
   docker-arm64:
     runs-on:
       - self-hosted
-      - Linux
-      - ARM64
+      - linux
+      - arm64
     permissions:
       id-token: write
       contents: read
