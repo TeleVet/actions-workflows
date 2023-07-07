@@ -51,7 +51,7 @@ jobs:
           region: ${{ inputs.region }}
 
       - name: Build & Push Docker Image
-        uses:  televet/actions-workflows/.github/actions/docker-build@mfeat/multi-arch
+        uses:  televet/actions-workflows/.github/actions/docker-build@feat/multi-arch
         with:
           registry: ${{ inputs.registry }}
           image_name: ${{ inputs.image_name }}
