@@ -165,7 +165,7 @@ jobs:
 
       - name: Run Core Jobs Automation Tests
         uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'TeleVet/core-jobs' }}
+        if: ${{ github.repository == 'TeleVet/core-jobs' && inputs.app_name == 'core-jobs-sqs-model-changed' }}
         with: 
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
@@ -174,7 +174,7 @@ jobs:
 
       - name: Run Payments Api Automation Tests
         uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'TeleVet/payments-api' }}
+        if: ${{ github.repository == 'TeleVet/payments-api' && inputs.app_name == 'payments-jobs' }}
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
