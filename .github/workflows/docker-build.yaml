@@ -50,6 +50,10 @@ jobs:
           role-to-assume: ${{ inputs.role-to-assume }}
           region: ${{ inputs.region }}
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
       - name: Build & Push Docker Image
         uses:  televet/actions-workflows/.github/actions/docker-build@feat/multi-arch
         with:
@@ -78,6 +82,10 @@ jobs:
           role-session-name: ${{ inputs.role-session-name }}
           role-to-assume: ${{ inputs.role-to-assume }}
           region: ${{ inputs.region }}
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build & Push Docker Image
         uses:  televet/actions-workflows/.github/actions/docker-build@feat/multi-arch
