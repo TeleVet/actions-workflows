@@ -62,6 +62,9 @@ jobs:
           build_args: ${{ secrets.build_args }}
           platform: linux/amd64
           tags: |
+            type=ref,event=branch
+            type=sha,format=long
+            type=ref,event=tag
             amd64
   
   docker-arm64:
@@ -82,7 +85,7 @@ jobs:
           role-session-name: ${{ inputs.role-session-name }}
           role-to-assume: ${{ inputs.role-to-assume }}
           region: ${{ inputs.region }}
-      
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -95,4 +98,7 @@ jobs:
           build_args: ${{ secrets.build_args }}
           platform: linux/arm64
           tags: |
+            type=ref,event=branch
+            type=sha,format=long
+            type=ref,event=tag
             arm64
