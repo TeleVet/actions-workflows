@@ -58,9 +58,6 @@ jobs:
           build_args: ${{ secrets.build_args }}
           platform: linux/amd64
           tags: |
-            type=ref,event=branch
-            type=sha,format=long
-            type=ref,event=tag
             amd64
   
   docker-arm64:
@@ -90,7 +87,4 @@ jobs:
           build_args: ${{ secrets.build_args }}
           platform: linux/arm64
           tags: |
-            type=ref,event=branch
-            type=sha,format=long
-            type=ref,event=tag
             arm64
