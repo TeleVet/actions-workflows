@@ -27,12 +27,12 @@ runs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v3
-      with:
-        images: ${{ inputs.registry }}/${{ inputs.image_name }}
-        tags: ${{ inputs.tags }}
+    # - name: Extract metadata (tags, labels) for Docker
+    #   id: meta
+    #   uses: docker/metadata-action@v3
+    #   with:
+    #     images: ${{ inputs.registry }}/${{ inputs.image_name }}
+    #     tags: ${{ inputs.tags }}
 
     - name: add dummy firebase
       shell: bash
@@ -46,8 +46,7 @@ runs:
         pull: true
         push: false
         build-args: ${{ inputs.build_args }}
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: ${{ inputs.tags }}
         platform: ${{ inputs.platform }}
         cache-from: type=gha
         cache-to: type=gha, mode=max
