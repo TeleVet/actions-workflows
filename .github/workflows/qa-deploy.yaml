@@ -162,3 +162,21 @@ jobs:
           repository: TeleVet/e2e-tests
           event-type: core-api-automated-test-isolated
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "core-api", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
+
+      - name: Run Core Jobs Automation Tests
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/core-jobs' && inputs.app_name == 'core-jobs-sqs-model-changed' }}
+        with: 
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: core-jobs-automated-test-isolated
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "core-jobs", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
+
+      - name: Run Payments Api Automation Tests
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/payments-api' && inputs.app_name == 'payments-jobs' }}
+        with:
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: payments-api-automated-test-isolated
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "payments-api", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
