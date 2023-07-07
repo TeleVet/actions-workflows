@@ -44,7 +44,7 @@ runs:
       with:
         context: .
         pull: true
-        push: false
+        push: true
         build-args: ${{ inputs.build_args }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
@@ -52,6 +52,6 @@ runs:
         cache-from: type=gha
         cache-to: type=gha, mode=max
 
-    - name: Push Docker Image
-      run: |
-        docker push ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.tags }}
+    # - name: Push Docker Image
+    #   run: |
+    #     docker push ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.tags }}
