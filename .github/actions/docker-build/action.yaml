@@ -45,7 +45,6 @@ runs:
         context: .
         pull: true
         push: true
-        provenance: false
         build-args: ${{ inputs.build_args }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
