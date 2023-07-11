@@ -126,14 +126,14 @@ jobs:
       - name: Extract ARM64 Image Digest
         id: extract-digest-arm64
         run: |
-          aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=${{ github.sha }}-arm64 > output.json
+          aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=sha-${{ github.sha }}-arm64 > output.json
           ARM64_DIGEST=$(jq -r '.images[0].imageManifest | fromjson | .manifests[] | select(.platform.architecture=="arm64") | .digest' output.json)
           echo "ARM64_DIGEST=$ARM64_DIGEST" >> $GITHUB_ENV
 
       - name: Extract AMD64 Image Digest
         id: extract-digest-amd64
         run: |
-          aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=${{ github.sha }}-amd64 > output.json
+          aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=sha-${{ github.sha }}-amd64 > output.json
           AMD64_DIGEST=$(jq -r '.images[0].imageManifest | fromjson | .manifests[] | select(.platform.architecture=="amd64") | .digest' output.json)
           echo "AMD64_DIGEST=$AMD64_DIGEST" >> $GITHUB_ENV
 
