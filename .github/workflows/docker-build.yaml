@@ -136,19 +136,19 @@ jobs:
           aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=sha-${{ github.sha }}-amd64 > output.json
           AMD64_DIGEST=$(jq -r '.images[0].imageManifest | fromjson | .manifests[] | select(.platform.architecture=="amd64") | .digest' output.json)
           echo "AMD64_DIGEST=$AMD64_DIGEST" >> $GITHUB_ENV
-
+      
       - name: Docker Create Manifest
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          echo "==> Creating Manifest!!!" 
-          docker manifest create ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest ${{ inputs.registry }}/${{ inputs.image_name }}@$ARM64_DIGEST ${{ inputs.registry }}/${{ inputs.image_name }}@$AMD64_DIGEST
-          echo "DONE!!!"
-
-          echo "==> Starting Annotations!!!"
-          docker manifest annotate ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest ${{ inputs.registry }}/${{ inputs.image_name }}@$ARM64_DIGEST --os linux --arch arm64
-          docker manifest annotate ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest ${{ inputs.registry }}/${{ inputs.image_name }}@$AMD64_DIGEST --os linux --arch amd64
+          
+          ARM64_IMAGE_REF="${{ inputs.registry }}/${{ inputs.image_name }}@$ARM64_DIGEST"
+          AMD64_IMAGE_REF="${{ inputs.registry }}/${{ inputs.image_name }}@$AMD64_DIGEST"
+          
+          echo "==> Creating Manifest!!!"
+          docker buildx imagetools create --tag ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest $AMD64_IMAGE_REF $ARM64_IMAGE_REF
           echo "DONE!!!"
 
           echo "==> Pushing Manifest!!!"
-          docker manifest push ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest
+          docker push ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest
           echo "DONE!!!"
+
