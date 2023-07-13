@@ -148,7 +148,3 @@ jobs:
           docker buildx imagetools create --tag ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest $AMD64_IMAGE_REF $ARM64_IMAGE_REF
           echo "DONE!!!"
 
-          echo "==> Pushing Manifest!!!"
-          docker push ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest
-          echo "DONE!!!"
-
