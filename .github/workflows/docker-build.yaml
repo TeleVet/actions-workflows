@@ -137,6 +137,16 @@ jobs:
           AMD64_DIGEST=$(jq -r '.images[0].imageManifest | fromjson | .manifests[] | select(.platform.architecture=="amd64") | .digest' output.json)
           echo "AMD64_DIGEST=$AMD64_DIGEST" >> $GITHUB_ENV
       
+      - name: Extract metadata (tags, labels) for Docker
+        id: tags
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ inputs.registry }}/${{ inputs.image_name }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=long
+            type=ref,event=tag
+
       - name: Docker Create Manifest
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
@@ -145,6 +155,6 @@ jobs:
           AMD64_IMAGE_REF="${{ inputs.registry }}/${{ inputs.image_name }}@$AMD64_DIGEST"
           
           echo "==> Creating Manifest!!!"
-          docker buildx imagetools create --tag ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest $AMD64_IMAGE_REF $ARM64_IMAGE_REF
+          docker buildx imagetools create --tag ${{ inputs.registry }}/${{ inputs.image_name }}:${{ steps.tags.outputs.tags }} $AMD64_IMAGE_REF $ARM64_IMAGE_REF
           echo "DONE!!!"
 
