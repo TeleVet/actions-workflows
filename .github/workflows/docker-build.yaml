@@ -160,14 +160,14 @@ jobs:
 
       - name: test-output
         run: |
-          echo ${{ steps.meta.outputs.tags }}
+          echo "${{ steps.meta.outputs.tags }}"
 
-      # - name: Additional Tags for Manifest
-      #   run: |
-      #     export IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=multi-arch-manifest --query 'images[].imageManifest' --output text | jq -r)
+      - name: Additional Tags for Manifest
+        run: |
+          export IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=multi-arch-manifest --query 'images[].imageManifest' --output text | jq -r)
 
-      #     echo "==> Tagging image with additional tags!!!"
-      #     for tag in $(echo "${{ steps.meta.outputs.tags }}" | tr "," "\n"); do
-      #       aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag $tag --image-manifest "$IMAGE_MANIFEST"
-      #     done
-      #     echo "DONE!!!"
+          echo "==> Tagging image with additional tags!!!"
+          for tag in $(echo "${{ steps.meta.outputs.tags }}" | tr "," "\n"); do
+            aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag $tag --image-manifest "$IMAGE_MANIFEST"
+          done
+          echo "DONE!!!"
