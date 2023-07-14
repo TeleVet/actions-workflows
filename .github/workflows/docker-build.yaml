@@ -165,6 +165,6 @@ jobs:
           echo "==> Tagging image with additional tags!!!"
           for tag in ${{ steps.meta.outputs.tags }}; do
             IMAGE_TAG=${tag#*:}
-            aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag $IMAGE_TAG --image-manifest "$IMAGE_MANIFEST"
+            aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$IMAGE_TAG" --image-manifest "$IMAGE_MANIFEST"
           done
           echo "DONE!!!"
