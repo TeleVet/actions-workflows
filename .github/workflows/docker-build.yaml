@@ -148,3 +148,22 @@ jobs:
           docker buildx imagetools create --tag ${{ inputs.registry }}/${{ inputs.image_name }}:multi-arch-manifest $AMD64_IMAGE_REF $ARM64_IMAGE_REF
           echo "DONE!!!"
 
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ inputs.registry }}/${{ inputs.image_name }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=long
+            type=ref,event=tag
+
+      - name: Additional Tags for Manifest
+        run: |
+          export IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=multi-arch-manifest --query 'images[].imageManifest' --output text | jq -r)
+
+          echo "==> Tagging image with additional tags!!!"
+          for tag in $(echo "${{ steps.meta.outputs.tags }}" | tr "," "\n"); do
+            aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag $tag --image-manifest "$IMAGE_MANIFEST"
+          done
+          echo "DONE!!!"

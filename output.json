@@ -1,0 +1,15 @@
+{
+    "images": [
+        {
+            "registryId": "400390564163",
+            "repositoryName": "core-api",
+            "imageId": {
+                "imageDigest": "sha256:77a0aaa2404738dc05a898df7377178ae177cf458d8a8d984b5ce53ce42019ed",
+                "imageTag": "multi-arch-manifest"
+            },
+            "imageManifest": "{\n  \"schemaVersion\": 2,\n  \"mediaType\": \"application/vnd.oci.image.index.v1+json\",\n  \"manifests\": [\n    {\n      \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",\n      \"digest\": \"sha256:b35d2a8bbdf957369b2ca008a8d1eb7c992081282c222a8806b5cdcf0389ee44\",\n      \"size\": 3156,\n      \"platform\": {\n        \"architecture\": \"amd64\",\n        \"os\": \"linux\"\n      }\n    },\n    {\n      \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",\n      \"digest\": \"sha256:2eabe38ae09121d5fc6c5d2bd3665ef13dc5d836ebe16bdfb8bf89b302bdd87a\",\n      \"size\": 3156,\n      \"platform\": {\n        \"architecture\": \"arm64\",\n        \"os\": \"linux\"\n      }\n    }\n  ]\n}",
+            "imageManifestMediaType": "application/vnd.oci.image.index.v1+json"
+        }
+    ],
+    "failures": []
+}
