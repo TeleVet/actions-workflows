@@ -163,7 +163,8 @@ jobs:
           export IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=multi-arch-manifest --query 'images[].imageManifest' --output text | jq -r)
 
           echo "==> Tagging image with additional tags!!!"
-          for tag in ${{ steps.meta.outputs.tags }}; do
+          IFS=$'\n' read -rd '' -a tags <<<"${{ steps.meta.outputs.tags }}"
+          for tag in "${tags[@]}"; do
             IMAGE_TAG=${tag#*:}
             aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$IMAGE_TAG" --image-manifest "$IMAGE_MANIFEST"
           done
