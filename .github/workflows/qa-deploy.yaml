@@ -69,12 +69,12 @@ jobs:
           region: ${{ inputs.region }}
 
       - name: Build & Push Docker Image
-        uses:  televet/actions-workflows/.github/actions/docker-build@main
+        uses:  televet/actions-workflows/.github/workflows/docker-build.yaml@feat/multi-arch
         with:
           registry: ${{ inputs.registry }}
           image_name: ${{ inputs.image_name }}
           build_args: ${{ secrets.build_args }}
-          tags: |
+          image_tags: |
             type=ref,event=pr
             type=raw,value=sha-${{ github.event.pull_request.head.sha }}
 

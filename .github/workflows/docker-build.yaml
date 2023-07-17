@@ -23,6 +23,12 @@ on:
         type: string
         description: Name for image
         required: true
+      image_tags:
+        required: false
+        default: |
+          type=ref,event=branch
+          type=sha,format=long
+          type=ref,event=tag
     secrets:
       build_args:
         description: Same as the `build-args` input on the [Docker Build and Push](https://github.com/docker/build-push-action#build-args-input) action.
@@ -153,10 +159,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ${{ inputs.registry }}/${{ inputs.image_name }}
-          tags: |
-            type=ref,event=branch
-            type=sha,format=long
-            type=ref,event=tag
+          tags: ${{ inputs.image_tags }}
 
       - name: Additional Tags for Manifest
         run: |
