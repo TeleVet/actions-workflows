@@ -24,6 +24,7 @@ on:
         description: Name for image
         required: true
       image_tags:
+        type: string
         required: false
         default: |
           type=ref,event=branch
