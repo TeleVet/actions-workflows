@@ -41,6 +41,7 @@ runs:
         docker-compose -f docker-compose-core.yml up -d
         docker-compose up -d
         cat docker-compose.yml
+        cat docker-compose-core.yml
       env:
         LANE: ${{ inputs.lane }}
         GITHUB_TOKEN: ${{ inputs.infra_repo_key }}
