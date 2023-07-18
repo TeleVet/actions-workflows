@@ -62,9 +62,9 @@ jobs:
       image_tags: |
         type=ref,event=pr
         type=raw,value=sha-${{ github.event.pull_request.head.sha }}
-      secrets:
-        build_args: |
-          NPM_TOKEN=${{ secrets.NPM_TOKEN }}
+    secrets:
+      build_args: |
+        NPM_TOKEN=${{ secrets.NPM_TOKEN }}
 
   qa-deployment:
     needs: qa-deployment-build
