@@ -38,17 +38,13 @@ runs:
         sh decryptLocalServiceEnvs.sh
         echo "$LANE"
         npx ts-node local/getQaLaneDeployments.ts
+        docker-compose -f docker-compose-core.yml up -d
         docker-compose up -d
         cat docker-compose.yml
       env:
         LANE: ${{ inputs.lane }}
         GITHUB_TOKEN: ${{ inputs.infra_repo_key }}
       working-directory: infrastructure
-
-    - name: Sleep
-      shell: bash
-      run: |
-        sleep 90
 
     - name: log docker stats and elasticsearch curls
       shell: bash
