@@ -51,7 +51,7 @@ env:
   IMAGE_TAG: ${{ inputs.image_tag }}
 
 jobs:
-  qa-deployment:
+  qa-deployment-build:
     uses: televet/actions-workflows/.github/workflows/docker-build.yaml@feat/multi-arch
     with:
       role-to-assume: ${{ inputs.role-to-assume }}
@@ -66,13 +66,15 @@ jobs:
         build_args: |
           NPM_TOKEN=${{ secrets.NPM_TOKEN }}
 
-      uses: televet/actions-workflows/.github/workflows/reusable-qa-deploy.yaml@feat/multi-arch
-      with:
-        app_name: ${{ inputs.app_name }}
-        role-to-assume: ${{ inputs.role-to-assume }}
-        role-session-name: ${{ inputs.role-session-name }}
-        region: ${{ inputs.region }}
-        infra_repo: ${{ inputs.infra_repo }}
-      secrets:
-        infra_repo_key: ${{ secrets.INFRA_REPO_KEY }} 
-        e2e_repo_access_token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
+  qa-deployment:
+    needs: qa-deployment-build
+    uses: televet/actions-workflows/.github/workflows/reusable-qa-deploy.yaml@feat/multi-arch
+    with:
+      app_name: ${{ inputs.app_name }}
+      role-to-assume: ${{ inputs.role-to-assume }}
+      role-session-name: ${{ inputs.role-session-name }}
+      region: ${{ inputs.region }}
+      infra_repo: ${{ inputs.infra_repo }}
+    secrets:
+      infra_repo_key: ${{ secrets.INFRA_REPO_KEY }} 
+      e2e_repo_access_token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
