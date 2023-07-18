@@ -52,113 +52,27 @@ env:
 
 jobs:
   qa-deployment:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-      deployments: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    uses: televet/actions-workflows/.github/workflows/docker-build.yaml@feat/multi-arch
+    with:
+      role-to-assume: ${{ inputs.role-to-assume }}
+      role-session-name: ${{ inputs.role-session-name }}
+      region: ${{ inputs.region }}
+      registry: ${{ inputs.registry }}
+      image_name: ${{ inputs.image_name }}
+      image_tags: |
+        type=ref,event=pr
+        type=raw,value=sha-${{ github.event.pull_request.head.sha }}
+      secrets:
+        build_args: |
+          NPM_TOKEN=${{ secrets.NPM_TOKEN }}
 
-      - name: Authenticate AWS Tools
-        uses: televet/actions-workflows/.github/actions/aws-auth@main
-        with:
-          role-session-name: ${{ inputs.role-session-name }}
-          role-to-assume: ${{ inputs.role-to-assume }}
-          region: ${{ inputs.region }}
-
-      - name: Build & Push Docker Image
-        uses:  televet/actions-workflows/.github/actions/docker-build@main
-        with:
-          registry: ${{ inputs.registry }}
-          image_name: ${{ inputs.image_name }}
-          build_args: ${{ secrets.build_args }}
-          tags: |
-            type=ref,event=pr
-            type=raw,value=sha-${{ github.event.pull_request.head.sha }}
-
-      - name: Select QA Environment
-        id: select-qa-env
-        uses: moonswitch/select-qa-env@v0.3.3
-        with:
-          cloud_provider: aws
-          table: qa-envs
-
-      - name: Checkout infrastructure repository
-        uses: actions/checkout@v3
-        with:
-          repository: ${{ github.repository_owner }}/${{ inputs.infra_repo }}
-          ssh-key: ${{ secrets.infra_repo_key }}
-          path: infrastructure
-
-      - name: Create QA deployment config file
-        env:
-          QA_LANE: ${{ steps.select-qa-env.outputs.env_name }}
-          QA_FILE: ${{ steps.select-qa-env.outputs.env_name }}.json
-          PR_NUMBER: ${{ github.event.number }}
-          PR_SHA: ${{ github.sha }}
-          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
-          PR_REPO: ${{ github.repository }}
-          URL: ${{ steps.select-qa-env.outputs.url }}
-        uses: nick-fields/retry@v2
-        with:
-          timeout_seconds: 60
-          max_attempts: 5
-          retry_on: error
-          command: |-
-            cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
-            ./qa_apps.sh add
-            
-            if [ -s "${QA_FILE}" -a -s "qa_lanes.libsonnet" ]; then
-              git config user.name github-actions
-              git config user.email github-actions@github.com
-              git add . && git diff --cached --quiet || \
-                git commit -m "[ci] Deploy PR-${{ github.event.number }} from ${{ github.repository }}" && \
-                git push && \
-                git status --porcelain
-              echo "QA file has been updated and pushed."
-            else
-              echo "${QA_FILE} or qa_lanes.libsonnet is empty. Aborting job."
-              exit 1
-            fi
-      
-      - name: Create QA Deployment
-        uses: altinukshini/deployment-action@v1.2.6
-        id: deployment
-        with:
-          pr: true
-          pr_id: ${{ github.event.number }}
-          transient_environment: true
-          token: "${{ github.token }}"
-          target_url: https://${{ steps.select-qa-env.outputs.url }}
-          environment: ${{ steps.select-qa-env.outputs.env_name }}
-          initial_status: success
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Run Clinic Web Automation Tests
-        uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'TeleVet/clinic-web' }}
-        with:
-          token: ${{ secrets.e2e_repo_access_token }}
-          repository: TeleVet/e2e-tests
-          event-type: clinic-web-automated-test-isolated
-          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "clinic-web", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
-
-      - name: Run Care Web Automation Tests
-        uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'TeleVet/care-web' }}
-        with:
-          token: ${{ secrets.e2e_repo_access_token }}
-          repository: TeleVet/e2e-tests
-          event-type: care-web-automated-test-isolated
-          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "care-web", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
-
-      - name: Run Core Api Automation Tests
-        uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'TeleVet/core-api' }}
-        with:
-          token: ${{ secrets.e2e_repo_access_token }}
-          repository: TeleVet/e2e-tests
-          event-type: core-api-automated-test-isolated
-          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "core-api", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
+      uses: televet/actions-workflows/.github/workflows/reusable-qa-deploy.yaml@feat/multi-arch
+      with:
+        app_name: ${{ inputs.app_name }}
+        role-to-assume: ${{ inputs.role-to-assume }}
+        role-session-name: ${{ inputs.role-session-name }}
+        region: ${{ inputs.region }}
+        infra_repo: ${{ inputs.infra_repo }}
+      secrets:
+        infra_repo_key: ${{ secrets.INFRA_REPO_KEY }} 
+        e2e_repo_access_token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
