@@ -180,3 +180,13 @@ jobs:
           repository: TeleVet/e2e-tests
           event-type: payments-api-automated-test-isolated
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "payments-api", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
+
+      - name: Run Seach API Automation Tests
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/search-api' && inputs.app_name == 'search-api' }}
+        with: 
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: search-api-automated-test-isolated
+          client-payload: '{"ref": "${{ github.even.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "search-api", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}"}'
+      
