@@ -15,7 +15,7 @@ on:
         type: string
         description: Name to use for role session
         required: true
-      image_tag:
+      image_tags:
         type: string
         description: Image tag that should be deployed to qa.
         required: true
