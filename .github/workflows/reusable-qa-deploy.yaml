@@ -15,6 +15,10 @@ on:
         type: string
         description: Name to use for role session
         required: true
+      image_tag:
+        type: string
+        description: Image tag that should be deployed to qa.
+        required: true
       region:
         type: string
         description: AWS region to use
