@@ -62,9 +62,7 @@ jobs:
       image_tags: |
         type=ref,event=pr
         type=raw,value=sha-${{ github.event.pull_request.head.sha }}
-    secrets:
-      build_args: |
-        NPM_TOKEN=${{ secrets.NPM_TOKEN }}
+    secrets: ${{ secrets.build_args }}
 
   qa-deployment:
     needs: qa-deployment-build
@@ -76,5 +74,5 @@ jobs:
       region: ${{ inputs.region }}
       infra_repo: ${{ inputs.infra_repo }}
     secrets:
-      infra_repo_key: ${{ secrets.INFRA_REPO_KEY }} 
-      e2e_repo_access_token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
+      infra_repo_key: ${{ secrets.infra_repo_key }} 
+      e2e_repo_access_token: ${{ secrets.e2e_repo_access_token }}
