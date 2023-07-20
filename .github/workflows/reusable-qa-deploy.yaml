@@ -19,6 +19,14 @@ on:
         type: string
         description: AWS region to use
         required: true
+      registry:
+        type: string
+        description: Registry for image
+        required: true
+      image_name:
+        type: string
+        description: Name for image
+        required: true
       infra_repo:
         type: string
         description: Name of the infrastructure repo
