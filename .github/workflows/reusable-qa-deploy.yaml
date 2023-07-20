@@ -32,6 +32,8 @@ on:
 
 env:
   APP_NAME: ${{ inputs.app_name }}
+  IMAGE_REPO: ${{ inputs.registry }}/${{ inputs.image_name }}
+  IMAGE_TAG: ${{ inputs.image_tag }}
 
 jobs:
   qa-deployment:

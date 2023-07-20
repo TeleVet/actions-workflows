@@ -72,5 +72,7 @@ jobs:
       role-to-assume: ${{ inputs.role-to-assume }}
       role-session-name: ${{ inputs.role-session-name }}
       region: ${{ inputs.region }}
+      registry: ${{ inputs.registry }}
+      image_name: ${{ inputs.image_name }}
       infra_repo: ${{ inputs.infra_repo }}
     secrets: inherit
