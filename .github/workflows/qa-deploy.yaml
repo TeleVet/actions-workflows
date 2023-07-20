@@ -62,7 +62,7 @@ jobs:
       image_tags: |
         type=ref,event=pr
         type=raw,value=sha-${{ github.event.pull_request.head.sha }}
-    secrets: ${{ secrets.build_args }}
+    secrets: inherit
 
   qa-deployment:
     needs: qa-deployment-build
@@ -73,6 +73,4 @@ jobs:
       role-session-name: ${{ inputs.role-session-name }}
       region: ${{ inputs.region }}
       infra_repo: ${{ inputs.infra_repo }}
-    secrets:
-      infra_repo_key: ${{ secrets.infra_repo_key }} 
-      e2e_repo_access_token: ${{ secrets.e2e_repo_access_token }}
+    secrets: inherit
