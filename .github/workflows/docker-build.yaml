@@ -173,7 +173,7 @@ jobs:
           for i in $image; do
             image_tag=$(echo "$i" | cut -d ":" -f 2)
             random_string=$(uuidgen | cut -c1-8)
-            new_image_tag="${image_tag}-${random_string}"
+            new_image_tag="$image_tag-$random_string"
 
             aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$new_image_tag" --image-manifest "$IMAGE_MANIFEST"
           done
