@@ -152,7 +152,7 @@ jobs:
           AMD64_IMAGE_REF="${{ inputs.registry }}/${{ inputs.image_name }}@$AMD64_DIGEST"
           
           echo "==> Creating Manifest!!!"
-          docker buildx imagetools create --tag ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_name }}-multi-arch $AMD64_IMAGE_REF $ARM64_IMAGE_REF
+          docker buildx imagetools create --tag ${{ inputs.registry }}/${{ inputs.image_name }}:sha-${{ github.sha }}-multi-arch $AMD64_IMAGE_REF $ARM64_IMAGE_REF
           echo "DONE!!!"
 
       - name: Extract metadata (tags, labels) for Docker
