@@ -164,7 +164,7 @@ jobs:
 
       - name: Additional Tags for Manifest
         run: |
-          export IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=${{ inputs.image_name }}-multi-arch --query 'images[].imageManifest' --output text | jq -r)
+          export IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=sha-${{ github.sha }}-multi-arch --query 'images[].imageManifest' --output text | jq -r)
 
           echo "${{ steps.meta.outputs.tags }}" > tags.txt
           image=$(cat tags.txt)
