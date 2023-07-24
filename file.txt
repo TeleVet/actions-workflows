@@ -1,2 +1,0 @@
-***.dkr.ecr.us-east-2.amazonaws.com/core-api:feat-multi-arch
-***.dkr.ecr.us-east-2.amazonaws.com/core-api:sha-58975e9b947c7e222d1f28980350f8f8d0326e0c
