@@ -52,7 +52,7 @@ env:
 
 jobs:
   qa-deployment-build:
-    uses: televet/actions-workflows/.github/workflows/docker-build.yaml@feat/multi-arch
+    uses: televet/actions-workflows/.github/workflows/docker-build.yaml@main
     with:
       role-to-assume: ${{ inputs.role-to-assume }}
       role-session-name: ${{ inputs.role-session-name }}
