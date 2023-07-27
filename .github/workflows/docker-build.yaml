@@ -62,7 +62,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build & Push Docker Image
-        uses:  televet/actions-workflows/.github/actions/docker-build@main
+        uses:  televet/actions-workflows/.github/actions/docker-build@feat/multi-arch
         with:
           registry: ${{ inputs.registry }}
           image_name: ${{ inputs.image_name }}
@@ -97,7 +97,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build & Push Docker Image
-        uses:  televet/actions-workflows/.github/actions/docker-build@main
+        uses:  televet/actions-workflows/.github/actions/docker-build@feat/multi-arch
         with:
           registry: ${{ inputs.registry }}
           image_name: ${{ inputs.image_name }}
