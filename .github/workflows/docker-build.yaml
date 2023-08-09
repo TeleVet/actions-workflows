@@ -29,6 +29,7 @@ on:
         default: |
           type=ref,event=branch
           type=sha,format=long
+          typpe=sha,suffix=-${{ github.run_number }}
           type=ref,event=tag
     secrets:
       build_args:
