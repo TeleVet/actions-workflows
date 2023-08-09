@@ -58,6 +58,8 @@ jobs:
           build_args: ${{ secrets.build_args }}
           tags: |
             type=ref,event=branch
+            type=ref,event=branch,suffix=-${{ github.run_number }}
             type=sha,format=long
             type=sha,suffix=-${{ github.run_number }}
             type=ref,event=tag
+            type=ref,event=tag,suffix=-${{ github.run_number }}
