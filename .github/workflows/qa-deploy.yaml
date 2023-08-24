@@ -7,6 +7,10 @@ on:
         type: string
         description: Name of the app that is being updated.
         required: true
+      app_names:
+        type: string
+        description: Name of the apps that are being updated separated by a comma.
+        required: false
       image_tag:
         type: string
         description: Image tag that should be deployed to qa.
@@ -47,6 +51,7 @@ on:
 
 env:
   APP_NAME: ${{ inputs.app_name }}
+  APP_NAMES: ${{ inputs.app_names }}
   IMAGE_REPO: ${{ inputs.registry }}/${{ inputs.image_name }}
   IMAGE_TAG: ${{ inputs.image_tag }}
 
@@ -112,7 +117,7 @@ jobs:
           retry_on: error
           command: |-
             cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
-            ./qa_apps.sh add
+            node ./qa_apps.js add
             
             if [ -s "${QA_FILE}" -a -s "qa_lanes.libsonnet" ]; then
               git config user.name github-actions
