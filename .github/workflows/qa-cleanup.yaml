@@ -6,7 +6,7 @@ on:
       app_name:
         type: string
         description: Name of the app that is being updated.
-        required: true
+        required: false
       app_names:
         type: string
         description: Name of the apps that are being updated separated by a comma.
