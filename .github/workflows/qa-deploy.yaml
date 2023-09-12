@@ -45,9 +45,7 @@ on:
         description: Same as the `build-args` input on the [Docker Build and Push](https://github.com/docker/build-push-action#build-args-input) action.
         required: false
     outputs: 
-      qa_lane: 
-        description: The QA Lane set for this Pull Request
-        value: ${{ steps.checkout-infra.outputs.qa_lane }}
+      qa_lane: ${{ steps.checkout-infra.outputs.qa_lane }}
 
 env:
   APP_NAME: ${{ inputs.app_name }}
