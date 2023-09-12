@@ -47,7 +47,7 @@ on:
     outputs: 
       qa_lane: 
         description: The QA Lane set for this Pull Request
-        value: ${{ steps.select-qa-env.outputs.env_name }}
+        value: ${{ steps.checkout-infra.outputs.qa_lane }}
 
 env:
   APP_NAME: ${{ inputs.app_name }}
@@ -92,6 +92,9 @@ jobs:
           table: qa-envs
 
       - name: Checkout infrastructure repository
+        id: checkout-infra
+        outputs:
+          qa_lane: ${{ steps.select-qa-env.outputs.env_name }}
         uses: actions/checkout@v3
         with:
           repository: ${{ github.repository_owner }}/${{ inputs.infra_repo }}
