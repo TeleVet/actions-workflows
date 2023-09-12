@@ -47,7 +47,7 @@ on:
     outputs: 
       qa_lane: 
         description: The QA Lane set for this Pull Request
-        value: ${{ jobs.qa-deployment.outputs.qa-lane}}
+        value: ${{ steps.select-qa-env.outputs.env_name }}
 
 env:
   APP_NAME: ${{ inputs.app_name }}
