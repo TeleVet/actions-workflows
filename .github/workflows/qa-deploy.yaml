@@ -59,7 +59,7 @@ jobs:
       id-token: write
       deployments: write
     outputs: 
-      qa_lane: ${{ steps.checkout-infra.outputs.qa_lane }}
+      qa_lane: ${{ steps.output-qa-lane.outputs.qa_lane }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -91,6 +91,7 @@ jobs:
       - name: Output QA Lane
         id: output-qa-lane
         run: |
+          echo "QA Lane: ${{ steps.select-qa-env.outputs.env_name }}"
           echo "qa_lane=${{ steps.select-qa-env.outputs.env_name }}" >> $GITHUB_OUTPUT
 
       - name: Checkout infrastructure repository
