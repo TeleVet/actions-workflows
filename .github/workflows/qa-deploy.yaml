@@ -149,14 +149,14 @@ jobs:
           initial_status: success
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Run Clinic Web Automation Tests
-        uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'TeleVet/clinic-web' }}
-        with:
-          token: ${{ secrets.e2e_repo_access_token }}
-          repository: TeleVet/e2e-tests
-          event-type: clinic-web-automated-test-isolated
-          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "clinic-web", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all"}'
+      # - name: Run Clinic Web Automation Tests
+      #   uses: peter-evans/repository-dispatch@v1
+      #   if: ${{ github.repository == 'TeleVet/clinic-web' }}
+      #   with:
+      #     token: ${{ secrets.e2e_repo_access_token }}
+      #     repository: TeleVet/e2e-tests
+      #     event-type: clinic-web-automated-test-isolated
+      #     client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "clinic-web", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all"}'
 
       - name: Run Care Web Automation Tests
         uses: peter-evans/repository-dispatch@v1
