@@ -32,6 +32,6 @@ runs:
         
     - shell: bash
       run: |
-        npm i
+        npm i --legacy-peer-deps
         npm run content:migrations:deploy
       working-directory: pawblisher
