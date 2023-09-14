@@ -22,3 +22,16 @@ runs:
         npm i
         npx prisma migrate dev
       working-directory: db-sdk-prisma2
+
+    - uses: actions/checkout@v2
+      with:
+        repository: TeleVet/pawblisher
+        path: pawblisher
+        ssh-key: ${{ inputs.infra_repo_key }}
+        ref: ${{ inputs.branch }}
+        
+    - shell: bash
+      run: |
+        npm i
+        npm run content:migrations:deploy
+      working-directory: pawblisher
