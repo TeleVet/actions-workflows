@@ -33,5 +33,5 @@ runs:
     - shell: bash
       run: |
         npm i --legacy-peer-deps
-        npm run content:migrations:deploy
+        npm run content:reset-db
       working-directory: pawblisher
