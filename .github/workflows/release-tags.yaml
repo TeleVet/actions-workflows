@@ -58,7 +58,7 @@ jobs:
 
       - name: Check and Tag Image with Commit SHA
         run: |
-          COMMIT_SHA=$(git rev-parse ${{ github.ref }})
+          COMMIT_SHA="sha-$(git rev-parse ${{ github.ref }})"
           IMAGE_META="$(aws ecr describe-images --repository-name=${{ inputs.image_name }} --image-ids=imageTag=$COMMIT_SHA 2> /dev/null)"
 
           if [[ $? == 0 ]]; then
@@ -70,4 +70,5 @@ jobs:
             aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$RELEASE_TAG" --image-manifest "$IMAGE_MANIFEST"
           else
             echo "Image with commit SHA $COMMIT_SHA not found."
+            exit 1
           fi
