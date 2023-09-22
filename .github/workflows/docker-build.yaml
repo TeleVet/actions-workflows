@@ -170,6 +170,8 @@ jobs:
           echo "${{ steps.meta.outputs.tags }}" > tags.txt
           image=$(cat tags.txt)
 
+          echo $image
+
           echo "==> Tagging image with additional tags!!!"
           for i in $image; do
             image_tag=$(echo "$i" | cut -d ":" -f 2)
