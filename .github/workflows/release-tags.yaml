@@ -55,25 +55,19 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      
-      - name: Check Image with Commit SHA
-        id: check-image
+
+      - name: Check and Tag Image with Commit SHA
         run: |
           COMMIT_SHA=$(git rev-parse ${{ github.ref }})
           IMAGE_META="$(aws ecr describe-images --repository-name=${{ inputs.image_name }} --image-ids=imageTag=$COMMIT_SHA 2> /dev/null)"
 
           if [[ $? == 0 ]]; then
             echo "Image with commit SHA $COMMIT_SHA found."
-            echo "IMAGE_FOUND=true" >> $GITHUB_ENV
+
+            IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=$COMMIT_SHA --query 'images[].imageManifest' --output text)
+
+            RELEASE_TAG=${{ github.ref_name }}
+            aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$RELEASE_TAG" --image-manifest "$IMAGE_MANIFEST"
           else
             echo "Image with commit SHA $COMMIT_SHA not found."
-            echo "IMAGE_FOUND=false" >> $GITHUB_ENV
           fi
-
-      - name: Tag Image with Release Tag
-        if: env.IMAGE_FOUND == 'true'
-        run: |
-          IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=$COMMIT_SHA --query 'images[].imageManifest' --output text)
-
-          RELEASE_TAG=${{ github.ref_name }}  # Assuming the ref_name is the tag name
-          aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$RELEASE_TAG" --image-manifest "$IMAGE_MANIFEST"
