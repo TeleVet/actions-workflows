@@ -55,20 +55,34 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ inputs.registry }}/${{ inputs.image_name }}
+          tags: ${{ inputs.image_tags }}
 
-      - name: Check and Tag Image with Commit SHA
+      - name: Tag Image with Release Tag
         run: |
           COMMIT_SHA="sha-$(git rev-parse ${{ github.ref }})"
-          IMAGE_META="$(aws ecr describe-images --repository-name=${{ inputs.image_name }} --image-ids=imageTag=$COMMIT_SHA 2> /dev/null)"
+          IMAGE_META="$( aws ecr batch-get-image --repository-name=${{ inputs.image_name }} --image-ids=imageTag=$COMMIT_SHA --query 'images[].imageId.imageTag' --output text )"
+          
+          echo "${{ steps.meta.outputs.tags }}" > tags.txt
+          image=$(cat tags.txt)
 
-          if [[ $? == 0 ]]; then
+
+          if [[ $COMMIT_SHA == $IMAGE_META ]]; then
             echo "Image with commit SHA $COMMIT_SHA found."
+            export IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=${COMMIT_SHA}-multi-arch --query 'images[].imageManifest' --output text | jq -r)
 
-            IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=$COMMIT_SHA --query 'images[].imageManifest' --output text)
-
-            RELEASE_TAG=${{ github.ref_name }}
-            aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$RELEASE_TAG" --image-manifest "$IMAGE_MANIFEST"
+            for i in $image; do
+              image_tag=$(echo "$i" | cut -d ":" -f 2)
+              aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$image_tag" --image-manifest "$IMAGE_MANIFEST"
+              echo "Added Tag $image_tag to $IMAGE_META!!!"
+            done
           else
             echo "Image with commit SHA $COMMIT_SHA not found."
             exit 1
           fi
+
