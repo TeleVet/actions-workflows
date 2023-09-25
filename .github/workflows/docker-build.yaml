@@ -173,11 +173,10 @@ jobs:
           echo "==> Tagging image with additional tags!!!"
           for i in $image; do
             image_tag=$(echo "$i" | cut -d ":" -f 2)
-            echo ${image_tag}
 
-            IMAGE_META="$( aws ecr describe-images --repository-name=$1 --image-ids=imageTag=$2 ||: )"
+            IMAGE_META="$( aws ecr batch-get-image --repository-name=${{ inputs.image_name }} --image-ids=imageTag=$image_tag --query 'images[].imageId.imageTag' --output text )"
 
-            if [[ $? != 0 ]]; then
+            if [[ $IMAGE_META != $image_tag ]]; then
               aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$image_tag" --image-manifest "$IMAGE_MANIFEST"
             else
               echo "Image with tag $image_tag already exists. Skipping."
