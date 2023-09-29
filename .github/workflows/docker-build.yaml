@@ -31,8 +31,6 @@ on:
           type=ref,event=branch,suffix=-${{ github.run_number }}
           type=sha,format=long
           type=sha,suffix=-${{ github.run_number }}
-          type=ref,event=tag
-          type=ref,event=tag,suffix=-${{ github.run_number }}
     secrets:
       build_args:
         description: Same as the `build-args` input on the [Docker Build and Push](https://github.com/docker/build-push-action#build-args-input) action.
@@ -176,6 +174,14 @@ jobs:
           for i in $image; do
             image_tag=$(echo "$i" | cut -d ":" -f 2)
 
-            aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$image_tag" --image-manifest "$IMAGE_MANIFEST"
+            IMAGE_META="$( aws ecr batch-get-image --repository-name=${{ inputs.image_name }} --image-ids=imageTag=$image_tag --query 'images[].imageId.imageTag' --output text )"
+
+            if [[ $IMAGE_META != $image_tag ]]; then
+              aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$image_tag" --image-manifest "$IMAGE_MANIFEST"
+            else
+              echo "Image with tag $image_tag already exists. Skipping."
+            fi
           done
           echo "DONE!!!"
+
+
