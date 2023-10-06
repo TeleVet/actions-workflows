@@ -1,0 +1,88 @@
+name: Docker Tag Releases
+
+on:
+  workflow_call:
+    inputs:
+      role-to-assume:
+        type: string
+        description: ARN of the role to assume
+        required: true
+      role-session-name:
+        type: string
+        description: Name to use for role session
+        required: true
+      region:
+        type: string
+        description: AWS region to use
+        required: true
+      registry:
+        type: string
+        description: Registry for image
+        required: true
+      image_name:
+        type: string
+        description: Name for image
+        required: true
+      image_tags:
+        type: string
+        required: false
+        default: |
+          type=ref,event=tag
+          type=ref,event=tag,suffix=-${{ github.run_number }}
+
+env:
+  APP_NAME: ${{ inputs.app_name }}
+  IMAGE_REPO: ${{ inputs.registry }}/${{ inputs.image_name }}
+  IMAGE_TAG: ${{ inputs.image_tag }}
+
+jobs:
+  release-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Authenticate AWS Tools
+        uses: televet/actions-workflows/.github/actions/aws-auth@main
+        with:
+          role-session-name: ${{ inputs.role-session-name }}
+          role-to-assume: ${{ inputs.role-to-assume }}
+          region: ${{ inputs.region }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ inputs.registry }}/${{ inputs.image_name }}
+          tags: ${{ inputs.image_tags }}
+
+      - name: Tag Image with Release Tag
+        run: |
+          COMMIT_SHA="sha-$(git rev-parse ${{ github.ref }})"
+          IMAGE_META="$( aws ecr batch-get-image --repository-name=${{ inputs.image_name }} --image-ids=imageTag=$COMMIT_SHA --query 'images[].imageId.imageTag' --output text )"
+          
+          echo "${{ steps.meta.outputs.tags }}" > tags.txt
+          image=$(cat tags.txt)
+
+
+          if [[ $COMMIT_SHA == $IMAGE_META ]]; then
+            echo "Image with commit SHA $COMMIT_SHA found."
+            export IMAGE_MANIFEST=$(aws ecr batch-get-image --repository-name ${{ inputs.image_name }} --image-ids imageTag=${COMMIT_SHA}-multi-arch --query 'images[].imageManifest' --output text | jq -r)
+
+            for i in $image; do
+              image_tag=$(echo "$i" | cut -d ":" -f 2)
+              aws ecr put-image --repository-name ${{ inputs.image_name }} --image-tag "$image_tag" --image-manifest "$IMAGE_MANIFEST"
+              echo "Added Tag $image_tag to $IMAGE_META!!!"
+            done
+          else
+            echo "Image with commit SHA $COMMIT_SHA not found."
+            exit 1
+          fi
+

@@ -6,7 +6,11 @@ on:
       app_name:
         type: string
         description: Name of the app that is being updated.
-        required: true
+        required: false
+      app_names:
+        type: string
+        description: Name of the apps that are being updated separated by a comma.
+        required: false
       image_tag:
         type: string
         description: Image tag that should be deployed to qa.
@@ -47,11 +51,26 @@ on:
 
 env:
   APP_NAME: ${{ inputs.app_name }}
+  APP_NAMES: ${{ inputs.app_names }}
   IMAGE_REPO: ${{ inputs.registry }}/${{ inputs.image_name }}
   IMAGE_TAG: ${{ inputs.image_tag }}
 
 jobs:
+  qa-deployment-build:
+    uses: televet/actions-workflows/.github/workflows/docker-build.yaml@multi-arch-branch
+    with:
+      role-to-assume: ${{ inputs.role-to-assume }}
+      role-session-name: ${{ inputs.role-session-name }}
+      region: ${{ inputs.region }}
+      registry: ${{ inputs.registry }}
+      image_name: ${{ inputs.image_name }}
+      image_tags: |
+        type=ref,event=pr
+        type=raw,value=sha-${{ github.event.pull_request.head.sha }}
+    secrets: inherit
+
   qa-deployment:
+    needs: qa-deployment-build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -67,16 +86,6 @@ jobs:
           role-session-name: ${{ inputs.role-session-name }}
           role-to-assume: ${{ inputs.role-to-assume }}
           region: ${{ inputs.region }}
-
-      - name: Build & Push Docker Image
-        uses:  televet/actions-workflows/.github/actions/docker-build@main
-        with:
-          registry: ${{ inputs.registry }}
-          image_name: ${{ inputs.image_name }}
-          build_args: ${{ secrets.build_args }}
-          tags: |
-            type=ref,event=pr
-            type=raw,value=sha-${{ github.event.pull_request.head.sha }}
 
       - name: Select QA Environment
         id: select-qa-env
@@ -108,8 +117,8 @@ jobs:
           retry_on: error
           command: |-
             cd ${GITHUB_WORKSPACE}/infrastructure/qa-envs
-            ./qa_apps.sh add
-            
+            node ./qa_apps.js add
+
             if [ -s "${QA_FILE}" -a -s "qa_lanes.libsonnet" ]; then
               git config user.name github-actions
               git config user.email github-actions@github.com
@@ -122,7 +131,7 @@ jobs:
               echo "${QA_FILE} or qa_lanes.libsonnet is empty. Aborting job."
               exit 1
             fi
-      
+
       - name: Create QA Deployment
         uses: altinukshini/deployment-action@v1.2.6
         id: deployment
@@ -165,8 +174,8 @@ jobs:
 
       - name: Run Core Jobs Automation Tests
         uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'TeleVet/core-jobs' && inputs.app_name == 'core-jobs-sqs-model-changed' }}
-        with: 
+        if: ${{ github.repository == 'TeleVet/core-jobs'  }}
+        with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
           event-type: core-jobs-automated-test-isolated
@@ -181,14 +190,14 @@ jobs:
           event-type: payments-api-automated-test-isolated
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "payments-api", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all"}'
 
-      - name: Run Seach API Automation Tests
+      - name: Run Search API Automation Tests
         uses: peter-evans/repository-dispatch@v1
-        if: ${{ github.repository == 'TeleVet/search-api' && inputs.app_name == 'search-api' }}
-        with: 
+        if: ${{ github.repository == 'TeleVet/search-api'}}
+        with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
           event-type: search-api-automated-test-isolated
-          client-payload: '{"ref": "${{ github.even.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "search-api", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all"}'
+          client-payload: '{"ref": "${{ github.even.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "search-api", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all"}
 
       - name: Run Pawblisher Automation Tests
         uses: peter-evans/repository-dispatch@v1
@@ -198,5 +207,3 @@ jobs:
           repository: TeleVet/e2e-tests
           event-type: pawblisher-automated-test-isolated
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "pawblisher", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all"}'
-      
-      
