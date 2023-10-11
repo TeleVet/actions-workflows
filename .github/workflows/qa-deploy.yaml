@@ -158,6 +158,15 @@ jobs:
           event-type: clinic-web-automated-test-isolated
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "clinic-web", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all"}'
 
+      - name: Test PR Checks
+        uses: LouisBrunner/checks-action@v1.6.2
+        with:
+          token: ${{ secrets.GITUB_TOKEN }}
+          repo: 'TeleVet/clinic-web'
+          sha: ${{ github.event.pull_request.head.sha }}
+          name: Playwright Tests
+          conclusion: success
+
       - name: Run Care Web Automation Tests
         uses: peter-evans/repository-dispatch@v1
         if: ${{ github.repository == 'TeleVet/care-web' }}
