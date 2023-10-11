@@ -165,8 +165,8 @@ jobs:
           token: "${{ github.token }}"
           repo: 'TeleVet/clinic-web'
           sha: ${{ github.event.pull_request.head.sha }}
-          name: Playwright Tests
-          conclusion: success
+          name: Cooper Playwright Tests
+          conclusion: failure
 
       - name: Run Care Web Automation Tests
         uses: peter-evans/repository-dispatch@v1
