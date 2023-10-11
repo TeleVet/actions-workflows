@@ -161,7 +161,7 @@ jobs:
       - name: Test PR Checks
         uses: LouisBrunner/checks-action@v1.6.2
         with:
-          token: ${{ secrets.GITUB_TOKEN }}
+          token: "${{ github.token }}"
           repo: 'TeleVet/clinic-web'
           sha: ${{ github.event.pull_request.head.sha }}
           name: Playwright Tests
