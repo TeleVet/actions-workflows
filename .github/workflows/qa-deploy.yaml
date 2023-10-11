@@ -62,6 +62,7 @@ jobs:
       contents: read
       id-token: write
       deployments: write
+      checks: write
     outputs: 
       qa_lane: ${{ steps.output-qa-lane.outputs.qa_lane }}
     steps:
