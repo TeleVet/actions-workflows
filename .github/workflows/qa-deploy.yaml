@@ -176,4 +176,3 @@ jobs:
           repository: TeleVet/e2e-tests
           event-type: playwright-automated-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.check-id.outputs.check_id }}"}'
-
