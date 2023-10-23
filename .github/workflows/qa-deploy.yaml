@@ -146,7 +146,7 @@ jobs:
           initial_status: success
           ref: ${{ github.event.pull_request.head.ref }}
       
-      - name: Create Clinic Web Commit Check
+      - name: Create Playwright Commit Check
         id: check-id
         if: | 
           ${{ github.repository == 'TeleVet/clinic-web' ||
