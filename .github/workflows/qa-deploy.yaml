@@ -43,7 +43,7 @@ on:
     secrets:
       infra_repo_key:
         required: true
-      e2e_repo_access_token:
+      E2E_REPO_ACCESS_TOKEN:
         required: false
       build_args:
         description: Same as the `build-args` input on the [Docker Build and Push](https://github.com/docker/build-push-action#build-args-input) action.
@@ -210,7 +210,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         if: ${{ github.repository == 'TeleVet/clinic-web' }}
         with:
-          token: ${{ secrets.e2e_repo_access_token }}
+          token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
           repository: TeleVet/e2e-tests
           event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.clinic-web-check-id.outputs.check_id }}"}'
@@ -219,7 +219,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         if: ${{ github.repository == 'TeleVet/care-web' }}
         with:
-          token: ${{ secrets.e2e_repo_access_token }}
+          token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
           repository: TeleVet/e2e-tests
           event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.care-web-check-id.outputs.check_id }}"}'
@@ -228,7 +228,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         if: ${{ github.repository == 'TeleVet/core-api' }}
         with:
-          token: ${{ secrets.e2e_repo_access_token }}
+          token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
           repository: TeleVet/e2e-tests
           event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.core-api-check-id.outputs.check_id }}"}'
@@ -237,7 +237,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         if: ${{ github.repository == 'TeleVet/core-jobs' }}
         with:
-          token: ${{ secrets.e2e_repo_access_token }}
+          token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
           repository: TeleVet/e2e-tests
           event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.core-jobs-check-id.outputs.check_id }}"}'
@@ -246,7 +246,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         if: ${{ github.repository == 'TeleVet/payments-api' }}
         with:
-          token: ${{ secrets.e2e_repo_access_token }}
+          token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
           repository: TeleVet/e2e-tests
           event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.payments-api-check-id.outputs.check_id }}"}'
@@ -255,7 +255,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         if: ${{ github.repository == 'TeleVet/search-api' }}
         with:
-          token: ${{ secrets.e2e_repo_access_token }}
+          token: ${{ secrets.E2E_REPO_ACCESS_TOKEN }}
           repository: TeleVet/e2e-tests
           event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.search-api-check-id.outputs.check_id }}"}'
