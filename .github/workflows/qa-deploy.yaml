@@ -146,15 +146,19 @@ jobs:
           initial_status: success
           ref: ${{ github.event.pull_request.head.ref }}
       
-      - name: Create Playwright Commit Check
-        id: check-id
-        if: | 
-          ${{ github.repository == 'TeleVet/clinic-web' ||
-          github.repository == 'TeleVet/care-web' ||
-          github.repository == 'TeleVet/core-api' || 
-          github.repository == 'TeleVet/core-jobs' ||
-          github.repository == 'TeleVet/payments-api' ||
-          github.repository == 'TeleVet/search-api' }}
+      - name: Create Clinic Web Playwright Commit Check
+        id: clinic-web-check-id
+        if: ${{ github.repository == 'TeleVet/clinic-web' }}
+        uses: LouisBrunner/checks-action@v1.6.2
+        with:
+          token: ${{ github.token }}
+          name: Playwright UI Tests
+          status: in_progress
+          sha: ${{ github.event.pull_request.head.sha }}
+      
+      - name: Create Care Web Playwright Commit Check
+        id: care-web-check-id
+        if: ${{ github.repository == 'TeleVet/care-web' }}
         uses: LouisBrunner/checks-action@v1.6.2
         with:
           token: ${{ github.token }}
@@ -162,17 +166,96 @@ jobs:
           status: in_progress
           sha: ${{ github.event.pull_request.head.sha }}
 
-      - name: Run Playwright Automated Tests
+      - name: Create Core Api Playwright Commit Check
+        id: core-api-check-id
+        if: ${{ github.repository == 'TeleVet/core-api' }}
+        uses: LouisBrunner/checks-action@v1.6.2
+        with:
+          token: ${{ github.token }}
+          name: Playwright UI Tests
+          status: in_progress
+          sha: ${{ github.event.pull_request.head.sha }}
+
+      - name: Create Core Jobs Playwright Commit Check
+        id: core-jobs-check-id
+        if: ${{ github.repository == 'TeleVet/core-jobs' }}
+        uses: LouisBrunner/checks-action@v1.6.2
+        with:
+          token: ${{ github.token }}
+          name: Playwright UI Tests
+          status: in_progress
+          sha: ${{ github.event.pull_request.head.sha }}
+
+      - name: Create Payments Api Playwright Commit Check
+        id: payments-api-check-id
+        if: ${{ github.repository == 'TeleVet/payments-api' }}
+        uses: LouisBrunner/checks-action@v1.6.2
+        with:
+          token: ${{ github.token }}
+          name: Playwright UI Tests
+          status: in_progress
+          sha: ${{ github.event.pull_request.head.sha }}
+
+      - name: Create Search Api Playwright Commit Check
+        id: search-api-check-id
+        if: ${{ github.repository == 'TeleVet/search-api' }}
+        uses: LouisBrunner/checks-action@v1.6.2
+        with:
+          token: ${{ github.token }}
+          name: Playwright UI Tests
+          status: in_progress
+          sha: ${{ github.event.pull_request.head.sha }}
+
+      - name: Run Playwright Automated Tests Clinic Web
         uses: peter-evans/repository-dispatch@v1
-        if: | 
-          ${{ github.repository == 'TeleVet/clinic-web' ||
-          github.repository == 'TeleVet/care-web' ||
-          github.repository == 'TeleVet/core-api' || 
-          github.repository == 'TeleVet/core-jobs' ||
-          github.repository == 'TeleVet/payments-api' ||
-          github.repository == 'TeleVet/search-api' }}
+        if: ${{ github.repository == 'TeleVet/clinic-web' }}
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
           event-type: playwright-automated-tests
-          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.check-id.outputs.check_id }}"}'
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.clinic-web-check-id.outputs.check_id }}"}'
+
+      - name: Run Playwright Automated Tests Care Web
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/care-web' }}
+        with:
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: playwright-automated-tests
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.care-web-check-id.outputs.check_id }}"}'
+  
+      - name: Run Playwright Automated Tests Core Api
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/core-api' }}
+        with:
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: playwright-automated-tests
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.core-api-check-id.outputs.check_id }}"}'
+  
+      - name: Run Playwright Automated Tests Core Jobs
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/core-jobs' }}
+        with:
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: playwright-automated-tests
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.core-jobs-check-id.outputs.check_id }}"}'
+
+      - name: Run Playwright Automated Tests Payments Api
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/payments-api' }}
+        with:
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: playwright-automated-tests
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.payments-api-check-id.outputs.check_id }}"}'
+
+      - name: Run Playwright Automated Tests Search Api
+        uses: peter-evans/repository-dispatch@v1
+        if: ${{ github.repository == 'TeleVet/search-api' }}
+        with:
+          token: ${{ secrets.e2e_repo_access_token }}
+          repository: TeleVet/e2e-tests
+          event-type: playwright-automated-tests
+          client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.search-api-check-id.outputs.check_id }}"}'
