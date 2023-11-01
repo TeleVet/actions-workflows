@@ -148,8 +148,7 @@ jobs:
       
       - name: Create Clinic Web Playwright Commit Check
         id: clinic-web-check-id
-        if: | 
-          ${{ github.repository == 'TeleVet/clinic-web' }}
+        if: ${{ github.repository == 'TeleVet/clinic-web' }}
         uses: LouisBrunner/checks-action@v1.6.2
         with:
           token: ${{ github.token }}
@@ -159,8 +158,7 @@ jobs:
       
       - name: Create Care Web Playwright Commit Check
         id: care-web-check-id
-        if: | 
-          ${{ github.repository == 'TeleVet/care-web' }}
+        if: ${{ github.repository == 'TeleVet/care-web' }}
         uses: LouisBrunner/checks-action@v1.6.2
         with:
           token: ${{ github.token }}
@@ -170,8 +168,7 @@ jobs:
 
       - name: Create Core Api Playwright Commit Check
         id: core-api-check-id
-        if: | 
-          ${{ github.repository == 'TeleVet/core-api' }}
+        if: ${{ github.repository == 'TeleVet/core-api' }}
         uses: LouisBrunner/checks-action@v1.6.2
         with:
           token: ${{ github.token }}
@@ -181,8 +178,7 @@ jobs:
 
       - name: Create Core Jobs Playwright Commit Check
         id: core-jobs-check-id
-        if: | 
-          ${{ github.repository == 'TeleVet/core-jobs' }}
+        if: ${{ github.repository == 'TeleVet/core-jobs' }}
         uses: LouisBrunner/checks-action@v1.6.2
         with:
           token: ${{ github.token }}
@@ -192,8 +188,7 @@ jobs:
 
       - name: Create Payments Api Playwright Commit Check
         id: payments-api-check-id
-        if: | 
-          ${{ github.repository == 'TeleVet/payments-api' }}
+        if: ${{ github.repository == 'TeleVet/payments-api' }}
         uses: LouisBrunner/checks-action@v1.6.2
         with:
           token: ${{ github.token }}
@@ -203,8 +198,7 @@ jobs:
 
       - name: Create Search Api Playwright Commit Check
         id: search-api-check-id
-        if: | 
-          ${{ github.repository == 'TeleVet/search-api' }}
+        if: ${{ github.repository == 'TeleVet/search-api' }}
         uses: LouisBrunner/checks-action@v1.6.2
         with:
           token: ${{ github.token }}
