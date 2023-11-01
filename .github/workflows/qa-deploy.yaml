@@ -212,7 +212,7 @@ jobs:
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
-          event-type: playwright-automated-tests
+          event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.clinic-web-check-id.outputs.check_id }}"}'
 
       - name: Run Playwright Automated Tests Care Web
@@ -221,7 +221,7 @@ jobs:
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
-          event-type: playwright-automated-tests
+          event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.care-web-check-id.outputs.check_id }}"}'
   
       - name: Run Playwright Automated Tests Core Api
@@ -230,7 +230,7 @@ jobs:
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
-          event-type: playwright-automated-tests
+          event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.core-api-check-id.outputs.check_id }}"}'
   
       - name: Run Playwright Automated Tests Core Jobs
@@ -239,7 +239,7 @@ jobs:
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
-          event-type: playwright-automated-tests
+          event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.core-jobs-check-id.outputs.check_id }}"}'
 
       - name: Run Playwright Automated Tests Payments Api
@@ -248,7 +248,7 @@ jobs:
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
-          event-type: playwright-automated-tests
+          event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.payments-api-check-id.outputs.check_id }}"}'
 
       - name: Run Playwright Automated Tests Search Api
@@ -257,5 +257,5 @@ jobs:
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
-          event-type: playwright-automated-tests
+          event-type: playwright-automation-tests
           client-payload: '{"ref": "${{ github.event.pull_request.head.ref }}", "sha": "${{ github.event.pull_request.head.sha }}", "repository": "${{ github.repository }}", "user": "${{ github.actor }}", "qa_lane": "${{ steps.select-qa-env.outputs.env_name }}", "tests": "all", "check_id": "${{ steps.search-api-check-id.outputs.check_id }}"}'
