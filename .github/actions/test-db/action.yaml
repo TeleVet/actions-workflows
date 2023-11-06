@@ -20,7 +20,7 @@ runs:
     - shell: bash
       run: |
         npm i
-        npx prisma migrate dev
+        npx prisma migrate dev --skip-generate
       working-directory: db-sdk-prisma2
 
     - uses: actions/checkout@v2
