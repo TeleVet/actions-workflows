@@ -25,7 +25,7 @@ runs:
         repository: TeleVet/infrastructure
         path: infrastructure
         ssh-key: ${{ inputs.infra_repo_key }}
-        ref: ${{ inputs.branch }}
+        ref: sc/debug-pims-sync
 
     - name: Sops Binary Installer
       uses: mdgreenwald/mozilla-sops-action@v1.4.1
