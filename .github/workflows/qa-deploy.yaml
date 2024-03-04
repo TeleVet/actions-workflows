@@ -155,7 +155,8 @@ jobs:
           github.repository == 'TeleVet/core-jobs' ||
           (github.repository == 'TeleVet/payments-api' && inputs.app_name == 'payments_jobs') ||
           github.repository == 'TeleVet/search-api' ||
-          github.repository == 'TeleVet/pawblisher'
+          github.repository == 'TeleVet/pawblisher' ||
+          github.repository == 'TeleVet/widget-web'
         uses: LouisBrunner/checks-action@v1.6.2
         with:
           token: ${{ github.token }}
@@ -172,7 +173,8 @@ jobs:
           github.repository == 'TeleVet/core-jobs' ||
           (github.repository == 'TeleVet/payments-api' && inputs.app_name == 'payments_jobs') ||
           github.repository == 'TeleVet/search-api' ||
-          github.repository == 'TeleVet/pawblisher'
+          github.repository == 'TeleVet/pawblisher' ||
+          github.repository == 'TeleVet/widget-web'
         with:
           token: ${{ secrets.e2e_repo_access_token }}
           repository: TeleVet/e2e-tests
