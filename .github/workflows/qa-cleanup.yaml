@@ -111,7 +111,7 @@ jobs:
       
       - name: Release QA Environment
         id: release-qa-env
-        uses: moonswitch/release-qa-env@fix-in-use
+        uses: moonswitch/release-qa-env/.github/actions/release-qa-env@fix-in-use
         with:
           cloud_provider: aws
           table: qa-envs
